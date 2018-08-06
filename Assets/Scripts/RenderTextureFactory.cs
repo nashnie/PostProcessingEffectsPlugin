@@ -24,6 +24,11 @@ public class RenderTextureFactory
         return Get(baseRT.width >> downSample, baseRT.height >> downSample, baseRT.depth, baseRT.format, baseRT.sRGB ? RenderTextureReadWrite.sRGB : RenderTextureReadWrite.Linear);
     }
 
+    public RenderTexture Get(RenderTexture baseRT, int downSample, FilterMode filterMode = FilterMode.Bilinear)
+    {
+        return Get(baseRT.width >> downSample, baseRT.height >> downSample, baseRT.depth, baseRT.format, baseRT.sRGB ? RenderTextureReadWrite.sRGB : RenderTextureReadWrite.Linear, filterMode);
+    }
+
     public RenderTexture Get(int width, int height, int depth, RenderTextureFormat format, RenderTextureReadWrite readWrite = RenderTextureReadWrite.Default, FilterMode filterMode = FilterMode.Bilinear, string name = "RenderTextureFactoryRT")
     {
         RenderTexture temporary = RenderTexture.GetTemporary(width, height, depth, format, readWrite);
@@ -33,13 +38,13 @@ public class RenderTextureFactory
         return temporary;
     }
 
-    public void Realease(RenderTexture tempRT)
+    public void Release(RenderTexture tempRT)
     {
         tempRTMap.Remove(tempRT);
         RenderTexture.ReleaseTemporary(tempRT);
     }
 
-    public void RealeaseAll()
+    public void ReleaseAll()
     {
         var enumerator = tempRTMap.GetEnumerator();
         while (enumerator.MoveNext())
@@ -51,6 +56,6 @@ public class RenderTextureFactory
 
     public void Dispose()
     {
-        RealeaseAll();
+        ReleaseAll();
     }
 }
