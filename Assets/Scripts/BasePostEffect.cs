@@ -67,4 +67,36 @@ public class BasePostEffect
 #endif
         }
     }
+
+    public virtual void CheckShaderAndCreateMaterial()
+    {
+    }
+
+    public virtual Material CheckShaderAndCreateMaterial(Shader s, Material m2Create)
+    {
+        if (!s)
+        {
+            Debug.Log("Error,Missing shader in " + ToString());
+            isSupported = false;
+            return null;
+        }
+
+        if (s.isSupported && m2Create && m2Create.shader == s)
+        {
+            return m2Create;
+        }
+
+        if (!s.isSupported)
+        {
+            isSupported = false;
+            Debug.Log("The shader " + s.ToString() + " on effect " + ToString() + " is not supported on this platform!");
+            return null;
+        }
+
+        m2Create = new Material(s);
+        createdMaterials.Add(m2Create);
+        m2Create.hideFlags = HideFlags.DontSave;
+
+        return m2Create;
+    }
 }

@@ -18,6 +18,9 @@ public class PostProcessingEffect : MonoBehaviour
     public BlurEffect blurEffect;
     public BlurEffectModel blurEffectModel;
 
+    public OldFilmEffect oldFilmEffect;
+    public OldFilmEffectModel oldFilmEffectModel;
+
     public List<BasePostEffect> postEffectList = new List<BasePostEffect>();
 
     public void OnPostRender()
@@ -65,7 +68,8 @@ public class PostProcessingEffect : MonoBehaviour
             Graphics.Blit(source, destination);
             return;
         }
-        blurEffect.RenderImage(source, destination);
+        //blurEffect.RenderImage(source, destination);
+        oldFilmEffect.RenderImage(source, destination);
     }
 
     protected void Start()
@@ -77,9 +81,18 @@ public class PostProcessingEffect : MonoBehaviour
         blurEffect.renderTextureFactory = renderTextureFactory;  
         blurEffectModel = postEffectModel.blurEffectModel;
         blurEffect.SetPostEffectModel<BlurEffectModel>(blurEffectModel);
+
+        oldFilmEffect = new OldFilmEffect();
+        oldFilmEffect.renderTextureFactory = renderTextureFactory;
+        oldFilmEffectModel = postEffectModel.oldFilmEffectModel;
+        oldFilmEffect.SetPostEffectModel<OldFilmEffectModel>(oldFilmEffectModel);
+
         postEffectList.Add(blurEffect);
+        postEffectList.Add(oldFilmEffect);
 
         blurEffect.OnEnable();
+        oldFilmEffect.OnEnable();
+
         CheckResources();
     }
 
@@ -108,6 +121,7 @@ public class PostProcessingEffect : MonoBehaviour
         CheckSupport(false);
 
         blurEffect.CheckShaderAndCreateMaterial();
+        oldFilmEffect.CheckShaderAndCreateMaterial();
 
         if (!isSupported)
         {

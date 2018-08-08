@@ -40,6 +40,11 @@ public class BlurEffect : BasePostEffect
         blurShader = blurEffectModel.blur;
     }
 
+    public override void CheckShaderAndCreateMaterial()
+    {
+        blurMaterial = CheckShaderAndCreateMaterial(blurShader, blurMaterial);
+    }
+
     public override void RenderImage(RenderTexture source, RenderTexture destination)
     {
         float widthMod = 1.0f / (1.0f * (1 << downsample));
@@ -79,38 +84,5 @@ public class BlurEffect : BasePostEffect
 
         Graphics.Blit(rt, destination);
         renderTextureFactory.Release(rt);
-    }
-
-    public void CheckShaderAndCreateMaterial()
-    {
-        blurMaterial = CheckShaderAndCreateMaterial(blurShader, blurMaterial);
-    }
-
-    public Material CheckShaderAndCreateMaterial(Shader s, Material m2Create)
-    {
-        if (!s)
-        {
-            Debug.Log("Error,Missing shader in " + ToString());
-            isSupported = false;
-            return null;
-        }
-
-        if (s.isSupported && m2Create && m2Create.shader == s)
-        {
-            return m2Create;
-        }
-
-        if (!s.isSupported)
-        {
-            isSupported = false;
-            Debug.Log("The shader " + s.ToString() + " on effect " + ToString() + " is not supported on this platform!");
-            return null;
-        }
-
-        m2Create = new Material(s);
-        createdMaterials.Add(m2Create);
-        m2Create.hideFlags = HideFlags.DontSave;
-
-        return m2Create;
     }
 }
