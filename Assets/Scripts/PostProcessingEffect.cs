@@ -21,6 +21,9 @@ public class PostProcessingEffect : MonoBehaviour
     public OldFilmEffect oldFilmEffect;
     public OldFilmEffectModel oldFilmEffectModel;
 
+    public NightVisionEffect nightVisionEffect;
+    public NightVisionEffectModel nightVisionEffectModel;
+
     public List<BasePostEffect> postEffectList = new List<BasePostEffect>();
 
     public void OnPostRender()
@@ -69,16 +72,20 @@ public class PostProcessingEffect : MonoBehaviour
             return;
         }
         //blurEffect.RenderImage(source, destination);
-        oldFilmEffect.RenderImage(source, destination);
+        //oldFilmEffect.RenderImage(source, destination);
+        nightVisionEffect.RenderImage(source, destination);
     }
 
-    protected void Start()
+    public void OnEnable()
     {
+        rendererCamera = Camera.main;
+        isSupported = true;
+
         renderTextureFactory = new RenderTextureFactory();
         PostEffectModelContainer postEffectModel = Resources.Load("PostEffectModelContainer") as PostEffectModelContainer;
 
         blurEffect = new BlurEffect();
-        blurEffect.renderTextureFactory = renderTextureFactory;  
+        blurEffect.renderTextureFactory = renderTextureFactory;
         blurEffectModel = postEffectModel.blurEffectModel;
         blurEffect.SetPostEffectModel<BlurEffectModel>(blurEffectModel);
 
@@ -87,19 +94,21 @@ public class PostProcessingEffect : MonoBehaviour
         oldFilmEffectModel = postEffectModel.oldFilmEffectModel;
         oldFilmEffect.SetPostEffectModel<OldFilmEffectModel>(oldFilmEffectModel);
 
+        nightVisionEffect = new NightVisionEffect();
+        nightVisionEffect.renderTextureFactory = renderTextureFactory;
+        nightVisionEffectModel = postEffectModel.nightVisionEffectModel;
+        nightVisionEffect.SetPostEffectModel<NightVisionEffectModel>(nightVisionEffectModel);
+
         postEffectList.Add(blurEffect);
         postEffectList.Add(oldFilmEffect);
+        postEffectList.Add(nightVisionEffect);
 
-        blurEffect.OnEnable();
-        oldFilmEffect.OnEnable();
-
+        for (int i = 0; i < postEffectList.Count; i++)
+        {
+            BasePostEffect postEffect = postEffectList[i];
+            postEffect.OnEnable();
+        }
         CheckResources();
-    }
-
-    public void OnEnable()
-    {
-        rendererCamera = Camera.main;
-        isSupported = true;
     }
 
     void OnDestroy()
@@ -120,8 +129,11 @@ public class PostProcessingEffect : MonoBehaviour
     {
         CheckSupport(false);
 
-        blurEffect.CheckShaderAndCreateMaterial();
-        oldFilmEffect.CheckShaderAndCreateMaterial();
+        for (int i = 0; i < postEffectList.Count; i++)
+        {
+            BasePostEffect postEffect = postEffectList[i];
+            postEffect.CheckShaderAndCreateMaterial();
+        }
 
         if (!isSupported)
         {

@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: e55cfb6af586f034289e824b69790f68
+timeCreated: 1442565612
+licenseType: Free
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences:
+  - ImageShader: {fileID: 4800000, guid: 8b719ee334e341848a36500afb9057f1, type: 3}
+  - RampTex: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
