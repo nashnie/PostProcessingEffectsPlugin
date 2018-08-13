@@ -2,9 +2,9 @@ using UnityEngine.PostProcessing;
 
 namespace UnityEditor.PostProcessing
 {
-    using Settings = AmbientOcclusionModel.Settings;
+    using Settings = UnityEngine.PostProcessing.AmbientOcclusionModel.Settings;
 
-    [PostProcessingModelEditor(typeof(AmbientOcclusionModel))]
+    [PostProcessingModelEditor(typeof(UnityEngine.PostProcessing.AmbientOcclusionModel))]
     public class AmbientOcclusionModelEditor : PostProcessingModelEditor
     {
         SerializedProperty m_Intensity;

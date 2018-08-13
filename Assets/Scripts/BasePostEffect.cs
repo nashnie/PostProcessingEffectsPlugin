@@ -1,10 +1,15 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering;
+using System;
 
+/// <summary>
+/// BasePostEffect
+/// </summary>
 public class BasePostEffect
 {
     public RenderTextureFactory renderTextureFactory;
+    public bool active = false;
     protected bool isSupported = true;
     protected BasePostEffectModel postEffectModel;
     protected List<Material> createdMaterials = new List<Material>();
@@ -13,6 +18,16 @@ public class BasePostEffect
     {
     }
 
+    public virtual void PopulateCommandBuffer(CommandBuffer cb)
+    {
+    }
+
+    public virtual string GetName()
+    {
+        return "";
+    }
+
+
     protected virtual bool CheckResources()
     {
         return isSupported;
@@ -20,6 +35,7 @@ public class BasePostEffect
 
     public virtual void OnEnable()
     {
+        active = true;
         Debug.Log("OnEnable " + this.GetType().Name);
         //UnityEngine.Object postEffectModel = Resources.Load(this.GetType().Name);
         //SetPostEffectModel(postEffectModel as BasePostEffectModel);
@@ -37,6 +53,7 @@ public class BasePostEffect
 
     public virtual void OnDisable()
     {
+        active = false;
         isSupported = false;
     }
 

@@ -6,4 +6,5 @@ public class PostEffectModelContainer : ScriptableObject
     public BlurEffectModel blurEffectModel = new BlurEffectModel();
     public OldFilmEffectModel oldFilmEffectModel = new OldFilmEffectModel();
     public NightVisionEffectModel nightVisionEffectModel = new NightVisionEffectModel();
+    public AmbientOcclusionModel ambientOcclusionModel = new AmbientOcclusionModel();
 }
